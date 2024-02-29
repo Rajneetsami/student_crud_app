@@ -23,7 +23,7 @@ def record_of_login_in_csv_file(student_username):
 
 
 
-def transfer_csv_data_from_database_to_excel():
+def transfer_csv_data_to_excel():
 
     try:
         excel_path = 'login_history.xlsx'
@@ -109,52 +109,49 @@ def transfer_csv_data_to_inloggning_database():
 
 
 def schedule_task():
-    try:
-
-        schedule.every().hour.do(transfer_csv_data_from_database_to_excel)
-        schedule.every().hour.do(transfer_csv_data_to_inloggning_database)
-
-
-        while True:
-            schedule.run_pending()
+        try:
+            schedule.every().minute.do(transfer_csv_data_to_excel)
+            schedule.every().minute.do(transfer_csv_data_to_inloggning_database)
+            
+            
+            schedule.run_all()
             time.sleep(1)
-    except Exception as e:
-        print("\nError occurred in schedule task:", e)
-
-
+                
+        except Exception as e:
+            print("an error occur", e)
 
 
 def student_login():
-    try:
-        conn = sqlite3.connect('student_database.db')
-        cur = conn.cursor()
+        try:
+            conn = sqlite3.connect('student_database.db')
+            cur = conn.cursor()
 
-        student_username = input(" enter username: ")
+            student_username = input(" enter username: ")
 
-        cur.execute('''select * from student where
-                    student_username = ? ''', (student_username,))
-        user = cur.fetchone()
+            cur.execute('''select * from student where
+                        student_username = ? ''', (student_username,))
+            user = cur.fetchone()
 
-        if user:
-            password = input("enter your password: ")
-            cur.execute(''' select password from student where
-                        student_username = ?''',(student_username,))
-            save_password = cur.fetchone()
+            if user:
+                password = input("enter your password: ")
+                cur.execute(''' select password from student where
+                            student_username = ?''',(student_username,))
+                save_password = cur.fetchone()
 
-            if save_password and password == save_password[0]:
-                print("login sucessfully")
-                record_of_login_in_csv_file(student_username)
-                is_login.is_logged_in(student_username)
+                if save_password and password == save_password[0]:
+                    print("login sucessfully")
+                    record_of_login_in_csv_file(student_username)
+                    is_login.is_logged_in(student_username)
 
+                else:
+                    print("fail password")
             else:
-                print("fail password")
-        else:
-            print("user not exists")
+                print("user not exists")
         
         
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
     
-    except Exception as e:
-        print("\nError occurred during student login:", e)
+        except Exception as e:
+            print("\nError occurred during student login:", e)
         

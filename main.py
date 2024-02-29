@@ -1,4 +1,5 @@
 
+import csv
 from create import create_student
 import login
 
@@ -31,10 +32,11 @@ def main_function():
 
 if __name__ == "__main__" :
     try:
-
         main_function()
+        print("\nschedule task has been in processing..... ")
         login.schedule_task()
-        print("\nDone with schedule task")
-        
+        print("\nData transfer and processing completed.")
+
+
     except Exception as e:
         print("\nAn unexpected error occurred:",e)
