@@ -110,8 +110,8 @@ def transfer_csv_data_to_inloggning_database():
 
 def schedule_task():
         try:
-            schedule.every().minute.do(transfer_csv_data_to_excel)
-            schedule.every().minute.do(transfer_csv_data_to_inloggning_database)
+            schedule.every().hour.do(transfer_csv_data_to_excel)
+            schedule.every().hour.do(transfer_csv_data_to_inloggning_database)
             
             
             schedule.run_all()
